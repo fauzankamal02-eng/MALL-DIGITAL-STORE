@@ -1,0 +1,206 @@
+{
+  "entities": {
+    "UserProfile": {
+      "title": "UserProfile",
+      "description": "Private user account profile including loyalty balance and security flags.",
+      "type": "object",
+      "properties": {
+        "uid": { "type": "string", "minLength": 1, "maxLength": 128, "pattern": "^[a-zA-Z0-9_\\-]+$" },
+        "displayName": { "type": "string", "minLength": 1, "maxLength": 100 },
+        "email": { "type": "string", "format": "email", "minLength": 3, "maxLength": 160 },
+        "phone": { "type": "string", "maxLength": 24 },
+        "role": { "type": "string", "enum": ["customer", "seller", "admin"] },
+        "loyaltyPoints": { "type": "number" },
+        "mfaEnabled": { "type": "boolean" },
+        "biometricEnabled": { "type": "boolean" },
+        "createdAt": { "type": "string", "format": "date-time" },
+        "updatedAt": { "type": "string", "format": "date-time" }
+      },
+      "required": ["uid", "displayName", "email", "role", "loyaltyPoints", "mfaEnabled", "biometricEnabled", "createdAt", "updatedAt"]
+    },
+    "AdminRecord": {
+      "title": "AdminRecord",
+      "description": "Trusted administrator registry for server-side Firestore RBAC.",
+      "type": "object",
+      "properties": {
+        "uid": { "type": "string", "minLength": 1, "maxLength": 128, "pattern": "^[a-zA-Z0-9_\\-]+$" },
+        "email": { "type": "string", "format": "email", "minLength": 3, "maxLength": 160 },
+        "grantedAt": { "type": "string", "format": "date-time" }
+      },
+      "required": ["uid", "email", "grantedAt"]
+    },
+    "DigitalProduct": {
+      "title": "DigitalProduct",
+      "description": "Digital product listing with synchronized license inventory.",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string", "minLength": 1, "maxLength": 128, "pattern": "^[a-zA-Z0-9_\\-]+$" },
+        "title": { "type": "string", "minLength": 2, "maxLength": 140 },
+        "category": { "type": "string", "enum": ["Aplikasi Premium", "E-Book", "Template & Kode", "UI Kit", "Template", "Source Code", "Tipografi", "Preset"] },
+        "description": { "type": "string", "minLength": 5, "maxLength": 1000 },
+        "priceIdr": { "type": "number" },
+        "stock": { "type": "number" },
+        "soldCount": { "type": "number" },
+        "fileName": { "type": "string", "minLength": 3, "maxLength": 120 },
+        "fileFormat": { "type": "string", "minLength": 2, "maxLength": 40 },
+        "fileSizeMb": { "type": "number" },
+        "version": { "type": "string", "minLength": 1, "maxLength": 30 },
+        "imageUrl": { "type": "string", "maxLength": 300 },
+        "sellerId": { "type": "string", "minLength": 1, "maxLength": 128, "pattern": "^[a-zA-Z0-9_\\-]+$" },
+        "active": { "type": "boolean" },
+        "createdAt": { "type": "string", "format": "date-time" },
+        "updatedAt": { "type": "string", "format": "date-time" }
+      },
+      "required": ["id", "title", "category", "description", "priceIdr", "stock", "soldCount", "fileName", "fileFormat", "fileSizeMb", "version", "sellerId", "active", "createdAt", "updatedAt"]
+    },
+    "OrderRecord": {
+      "title": "OrderRecord",
+      "description": "Customer transaction record with payment verification and digital download metadata.",
+      "type": "object",
+      "properties": {
+        "orderCode": { "type": "string", "minLength": 4, "maxLength": 40, "pattern": "^[A-Z0-9\\-]+$" },
+        "buyerId": { "type": "string", "minLength": 1, "maxLength": 128, "pattern": "^[a-zA-Z0-9_\\-]+$" },
+        "buyerName": { "type": "string", "minLength": 1, "maxLength": 100 },
+        "buyerEmail": { "type": "string", "format": "email", "minLength": 3, "maxLength": 160 },
+        "sellerId": { "type": "string", "minLength": 1, "maxLength": 128, "pattern": "^[a-zA-Z0-9_\\-]+$" },
+        "productId": { "type": "string", "minLength": 1, "maxLength": 128, "pattern": "^[a-zA-Z0-9_\\-]+$" },
+        "productTitle": { "type": "string", "minLength": 2, "maxLength": 140 },
+        "amountIdr": { "type": "number" },
+        "discountIdr": { "type": "number" },
+        "finalAmountIdr": { "type": "number" },
+        "paymentMethod": { "type": "string", "enum": ["QRIS", "VA_BCA", "VA_MANDIRI", "VA_BNI", "VA_BRI", "GOPAY", "OVO", "DANA", "SHOPEEPAY", "CICILAN_3X", "CICILAN_6X"] },
+        "paymentStatus": { "type": "string", "enum": ["pending", "verified", "refunded"] },
+        "downloadToken": { "type": "string", "maxLength": 256 },
+        "downloadCount": { "type": "number" },
+        "promoCode": { "type": "string", "maxLength": 32 },
+        "installmentMonths": { "type": "number" },
+        "emailSent": { "type": "boolean" },
+        "createdAt": { "type": "string", "format": "date-time" },
+        "updatedAt": { "type": "string", "format": "date-time" }
+      },
+      "required": ["orderCode", "buyerId", "buyerName", "buyerEmail", "sellerId", "productId", "productTitle", "amountIdr", "discountIdr", "finalAmountIdr", "paymentMethod", "paymentStatus", "downloadCount", "installmentMonths", "emailSent", "createdAt", "updatedAt"]
+    },
+    "PayoutRequest": {
+      "title": "PayoutRequest",
+      "description": "Seller fund withdrawal request to an Indonesian local bank.",
+      "type": "object",
+      "properties": {
+        "sellerId": { "type": "string", "minLength": 1, "maxLength": 128, "pattern": "^[a-zA-Z0-9_\\-]+$" },
+        "bankCode": { "type": "string", "enum": ["BCA", "MANDIRI", "BNI", "BRI", "BSI", "JAGO", "SEABANK"] },
+        "bankName": { "type": "string", "minLength": 2, "maxLength": 60 },
+        "accountNumber": { "type": "string", "minLength": 6, "maxLength": 24, "pattern": "^[0-9]+$" },
+        "accountHolder": { "type": "string", "minLength": 2, "maxLength": 100 },
+        "amountIdr": { "type": "number" },
+        "feeIdr": { "type": "number" },
+        "netAmountIdr": { "type": "number" },
+        "status": { "type": "string", "enum": ["processing", "completed", "rejected"] },
+        "createdAt": { "type": "string", "format": "date-time" },
+        "updatedAt": { "type": "string", "format": "date-time" }
+      },
+      "required": ["sellerId", "bankCode", "bankName", "accountNumber", "accountHolder", "amountIdr", "feeIdr", "netAmountIdr", "status", "createdAt", "updatedAt"]
+    },
+    "PromoVoucher": {
+      "title": "PromoVoucher",
+      "description": "Promotional discount voucher and loyalty campaign definition.",
+      "type": "object",
+      "properties": {
+        "code": { "type": "string", "minLength": 3, "maxLength": 32, "pattern": "^[A-Z0-9_\\-]+$" },
+        "description": { "type": "string", "minLength": 3, "maxLength": 200 },
+        "discountType": { "type": "string", "enum": ["percent", "fixed"] },
+        "discountValue": { "type": "number" },
+        "minPurchaseIdr": { "type": "number" },
+        "usageCount": { "type": "number" },
+        "maxUsage": { "type": "number" },
+        "active": { "type": "boolean" },
+        "creatorId": { "type": "string", "minLength": 1, "maxLength": 128, "pattern": "^[a-zA-Z0-9_\\-]+$" },
+        "createdAt": { "type": "string", "format": "date-time" },
+        "updatedAt": { "type": "string", "format": "date-time" }
+      },
+      "required": ["code", "description", "discountType", "discountValue", "minPurchaseIdr", "usageCount", "maxUsage", "active", "creatorId", "createdAt", "updatedAt"]
+    },
+    "SupportMessage": {
+      "title": "SupportMessage",
+      "description": "Live customer support chat message.",
+      "type": "object",
+      "properties": {
+        "roomId": { "type": "string", "minLength": 1, "maxLength": 128, "pattern": "^[a-zA-Z0-9_\\-]+$" },
+        "senderId": { "type": "string", "minLength": 1, "maxLength": 128, "pattern": "^[a-zA-Z0-9_\\-]+$" },
+        "senderName": { "type": "string", "minLength": 1, "maxLength": 80 },
+        "senderRole": { "type": "string", "enum": ["customer", "support", "seller"] },
+        "text": { "type": "string", "minLength": 1, "maxLength": 1000 },
+        "orderRef": { "type": "string", "maxLength": 40 },
+        "createdAt": { "type": "string", "format": "date-time" }
+      },
+      "required": ["roomId", "senderId", "senderName", "senderRole", "text", "createdAt"]
+    },
+    "ActivityLog": {
+      "title": "ActivityLog",
+      "description": "Immutable platform audit log entry for admin monitoring.",
+      "type": "object",
+      "properties": {
+        "actorId": { "type": "string", "minLength": 1, "maxLength": 128, "pattern": "^[a-zA-Z0-9_\\-]+$" },
+        "actorEmail": { "type": "string", "minLength": 3, "maxLength": 160 },
+        "action": { "type": "string", "minLength": 2, "maxLength": 80 },
+        "category": { "type": "string", "enum": ["auth", "order", "inventory", "payout", "backup", "promo"] },
+        "summary": { "type": "string", "minLength": 3, "maxLength": 300 },
+        "createdAt": { "type": "string", "format": "date-time" }
+      },
+      "required": ["actorId", "actorEmail", "action", "category", "summary", "createdAt"]
+    },
+    "CloudBackupSnapshot": {
+      "title": "CloudBackupSnapshot",
+      "description": "Metadata record of an AES-256-GCM encrypted cloud backup archive.",
+      "type": "object",
+      "properties": {
+        "backupCode": { "type": "string", "minLength": 4, "maxLength": 64, "pattern": "^[A-Z0-9\\-_]+$" },
+        "creatorId": { "type": "string", "minLength": 1, "maxLength": 128, "pattern": "^[a-zA-Z0-9_\\-]+$" },
+        "algorithm": { "type": "string", "enum": ["AES-256-GCM"] },
+        "checksumSha256": { "type": "string", "minLength": 16, "maxLength": 128 },
+        "recordCount": { "type": "number" },
+        "sizeBytes": { "type": "number" },
+        "scheduleMode": { "type": "string", "enum": ["manual", "daily", "weekly"] },
+        "status": { "type": "string", "enum": ["encrypted_synced", "verified"] },
+        "createdAt": { "type": "string", "format": "date-time" }
+      },
+      "required": ["backupCode", "creatorId", "algorithm", "checksumSha256", "recordCount", "sizeBytes", "scheduleMode", "status", "createdAt"]
+    }
+  },
+  "firestore": {
+    "/users/{userId}": {
+      "schema": { "$ref": "#/entities/UserProfile" },
+      "description": "Private user profiles and security preferences isolated per user."
+    },
+    "/admins/{adminId}": {
+      "schema": { "$ref": "#/entities/AdminRecord" },
+      "description": "Trusted admin role registry."
+    },
+    "/products/{productId}": {
+      "schema": { "$ref": "#/entities/DigitalProduct" },
+      "description": "Digital product catalog with synchronized license stock."
+    },
+    "/orders/{orderId}": {
+      "schema": { "$ref": "#/entities/OrderRecord" },
+      "description": "Customer digital orders, payment verification status, and download counts."
+    },
+    "/payouts/{payoutId}": {
+      "schema": { "$ref": "#/entities/PayoutRequest" },
+      "description": "Seller bank withdrawal requests to Indonesian local banks."
+    },
+    "/promos/{promoId}": {
+      "schema": { "$ref": "#/entities/PromoVoucher" },
+      "description": "Active discount vouchers and loyalty campaigns."
+    },
+    "/support_messages/{messageId}": {
+      "schema": { "$ref": "#/entities/SupportMessage" },
+      "description": "Real-time live customer support chat messages scoped per user room."
+    },
+    "/activity_logs/{logId}": {
+      "schema": { "$ref": "#/entities/ActivityLog" },
+      "description": "Immutable user activity logs for admin oversight."
+    },
+    "/cloud_backups/{backupId}": {
+      "schema": { "$ref": "#/entities/CloudBackupSnapshot" },
+      "description": "AES-256-GCM encrypted cloud backup archive records."
+    }
+  }
+}

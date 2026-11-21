@@ -1,0 +1,6 @@
+{
+  "name": "KaryaDigital — Platform Niaga Produk Digital Indonesia",
+  "description": "Platform jual beli produk digital Indonesia dengan unduh file otomatis pasca verifikasi pembayaran lokal (QRIS, VA Bank, E-Wallet, Cicilan), analitik penjualan real-time, penarikan dana bank lokal, manajemen inventaris sinkron, live chat, MFA/biometrik, ekspor PDF/CSV, dan pencadangan awan terenkripsi.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}
